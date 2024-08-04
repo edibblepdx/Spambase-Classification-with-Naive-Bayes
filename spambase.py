@@ -1,6 +1,8 @@
 # Ethan Dibble
 #
 # Spambase Classification with Naive Bayes
+# class=0 not spam
+# class=1 spam
 
 import numpy as np
 import math
@@ -50,6 +52,21 @@ def naive_bayes(x_test, prior_1, prior_0, mean_1, mean_0, std_1, std_0):
         prediction[i] = 1 if a > b else 0
 
     return prediction
+
+def calc_apr(y_test, y_pred):
+    """
+    calculate the accuracy, precision, and recall
+    """
+    TP = np.sum((y_test == 1) & (y_pred == 1))  # true positive
+    FP = np.sum((y_test == 0) & (y_pred == 1))  # false positive
+    TN = np.sum((y_test == 0) & (y_pred == 0))  # true negative
+    FN = np.sum((y_test == 1) & (y_pred == 0))  # false negative
+
+    accuracy = (TP + TN) / (TP + TN + FP + FN)
+    precision = (TP) / (TP + FP)
+    recall = (TP) / (TP + FN)
+
+    return accuracy, precision, recall
 
 def main():
     # fetch dataset 
@@ -102,6 +119,12 @@ def main():
 
     # perform naive bayes classification on the test set
     y_pred = naive_bayes(x_test, prior_1, prior_0, mean_1, mean_0, std_1, std_0)
+
+    # accuracy precision recall
+    accuracy, precision, recall = calc_apr(y_test, y_pred)
+    print('accuracy: ', accuracy)
+    print('precision:', precision)
+    print('recall:   ', recall)
 
     # Confusion matrices for the perceptron on the test set
     cm = confusion_matrix(y_test, y_pred)
