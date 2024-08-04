@@ -95,12 +95,12 @@ def main():
     std_0 = np.std(x_train[907:], axis=0, dtype="float64")
 
     # replace all zero std values with some minimal=10^-8
-    mask_1 = std_1 == 0.0
-    mask_0 = std_0 == 0.0
+    mask_1 = std_1 == 0.0   # mask is faster for fancy indexing
+    mask_0 = std_0 == 0.0   # mask is faster for fancy indexing
     std_1[mask_1] = 10**-8
     std_0[mask_0] = 10**-8
 
-    # naive bayes part
+    # perform naive bayes classification on the test set
     y_pred = naive_bayes(x_test, prior_1, prior_0, mean_1, mean_0, std_1, std_0)
 
     # Confusion matrices for the perceptron on the test set
